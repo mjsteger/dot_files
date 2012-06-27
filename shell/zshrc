@@ -84,3 +84,5 @@ PATH=$PATH:/usr/texbin/
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 source $HOME/.z/z.sh
 export ZSH=$HOME/.oh-my-zsh
+
+eval `ssh-agent`

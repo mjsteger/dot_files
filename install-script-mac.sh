@@ -262,3 +262,5 @@ for each in "shell firefox" do
 done
 
 ln -s ./emacs/emacs ~/.emacs
+
+
