@@ -11,7 +11,6 @@ setopt magic_equal_subst    # Do completion on <value> in foo=<value>
 setopt nonomatch            # Don't error if globbing fails; just leave the globbing chars in
 setopt auto_cd              # Skip `cd` when changing to a directory
 setopt no_beep              # "I refer to this informally as the OPEN_PLAN_OFFICE_NO_VIGILANTE_ATTACKS option."
-export EDITOR=emacs
 export PAGER=less
 setopt cdablevars           # Allow to have bookmarks with emacs(see bottom)
 
@@ -38,7 +37,9 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-export ZSH_THEME="prose"
+#export ZSH_THEME="random"
+export ZSH_THEME="fino"
+# Consider "obraun"
 
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
@@ -70,20 +71,27 @@ export PYTHONPATH=/usr/lib/python2.6/site-packages/
 alias ll='ls -l'
 alias emacsclient='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n $@'
 alias ec='emacsclient'
+export EDITOR=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
 alias hgpush="printf '%s%s' 'hg push ssh://hg@bitbucket.org/mjsteger/' $1"
 #[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
 [[ -r ~/.zsh.bmk ]] && source ~/.zsh.bmk
 PATH=$PATH:~/bin/
 alias python32="arch -i386 /usr/bin/python2.6"
-PATH=$PATH:/Users/michaelsteger/classes/961cs/projects/arcanist/bin/
-source /Users/michaelsteger/classes/961cs/projects/arcanist/resources/shell/bash-completion
 unset SSH_AUTH_SOCK
 PATH=$PATH:/usr/texbin/
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 source $HOME/.z/z.sh
 export ZSH=$HOME/.oh-my-zsh
 
 eval `ssh-agent`
-ssh-add ~/.ssh/id_github
+# ssh-add ~/.ssh/id_rsa
+eval "$(rbenv init -)"
+PATH=$PATH:~/.cabal/bin/
+alias b="bundle exec"
+export DOCKER_HOST='tcp://192.168.33.42:2375'
+export JRUBY_OPTS="--2.0 -J-Xmx4096m -J-XX:PermSize=512m -J-XX:MaxPermSize=512m"
+alias eu4="~/Library/Application\ Support/Steam/SteamApps/common/Europa\ Universalis\ IV/eu4.app/Contents/MacOS/eu4"
+export LPASS_AGENT_TIMEOUT=0
+function rename_window() { echo -ne "\033]0;$1\007" }
+DISABLE_AUTO_TITLE="true"
