@@ -95,3 +95,7 @@ alias eu4="~/Library/Application\ Support/Steam/SteamApps/common/Europa\ Univers
 export LPASS_AGENT_TIMEOUT=0
 function rename_window() { echo -ne "\033]0;$1\007" }
 DISABLE_AUTO_TITLE="true"
+eval "$(direnv hook zsh)"
+export GOPATH=/Users/steggy/gocode/
+PATH=$PATH:${GOPATH}/bin
+source ~/.secrets
