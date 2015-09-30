@@ -12,4 +12,6 @@ git submodule init && git submodule update
 
 cp Workman-P.keylayout ~/Library/Keyboard\ Layouts/
 
-osascript setup.scpt
+osascript add_workman.scpt
+# TODO Need further testing on how to revert to original
+# osascript make_caps_lock_control.scpt
