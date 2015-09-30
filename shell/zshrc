@@ -58,7 +58,7 @@ export ZSH_THEME="fino"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git osx ruby ssh-agent heroku gem git-flow github pip)
+plugins=(git osx ruby ssh-agent heroku git-flow github pip)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -71,9 +71,8 @@ export PYTHONPATH=/usr/lib/python2.6/site-packages/
 alias ll='ls -l'
 alias emacsclient='/usr/local/bin/emacsclient -n $@'
 alias ec='emacsclient'
-export EDITOR=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
+export EDITOR=/usr/local/bin/emacsclient-friendly
 alias hgpush="printf '%s%s' 'hg push ssh://hg@bitbucket.org/mjsteger/' $1"
-#[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
 [[ -r ~/.zsh.bmk ]] && source ~/.zsh.bmk
 PATH=$PATH:~/bin/
 alias python32="arch -i386 /usr/bin/python2.6"
