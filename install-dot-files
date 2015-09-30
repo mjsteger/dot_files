@@ -2,7 +2,6 @@
 
 require 'optparse'
 require 'yaml'
-require 'byebug'
 
 options = {}
 OptionParser.new do |opts|
