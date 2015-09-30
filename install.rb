@@ -38,6 +38,9 @@ class Resource
   end
 end
 
+# class CapsLockIsControl < Resource
+# end
+
 class SymLink < Resource
   def self.installed?
     File.identical?(*[local_path, install_path].map(&File.method(:expand_path)))

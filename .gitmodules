@@ -1,6 +1,6 @@
 [submodule "dreamacs"]
 	path = dreamacs
-	url = git@github.com:mjsteger/dreamacs.git
+	url = https://github.com:mjsteger/dreamacs.git
 [submodule "custom_dotemacs"]
 	path = custom_dotemacs
-	url = git@github.com:mjsteger/custom_dotemacs.git
+	url = https://github.com:mjsteger/custom_dotemacs.git
