@@ -9,3 +9,7 @@ fi
 git submodule init && git submodule update
 
 ./install-dot-files -g
+
+cp Workman-P.keylayout ~/Library/Keyboard\ Layouts/
+
+osascript setup.scpt
