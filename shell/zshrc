@@ -1,3 +1,4 @@
+export PATH=/Users/steggy/personal/dot_files/homebrew/bin/:$PATH
 umask 077                   # Deny group/world rwx by default (multiuser systems)
 setopt extended_glob
 setopt prompt_subst         # Required for the prompt
@@ -64,7 +65,7 @@ plugins=(git osx ruby ssh-agent heroku git-flow github pip)
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/git/bin:/usr/texbin:/usr/X11/bin
+export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/git/bin:/usr/texbin:/usr/X11/bin
 
 # set term to 256 because pretty emacs is good emacs
 export TERM=xterm-256color
@@ -79,7 +80,6 @@ PATH=$PATH:/usr/texbin/
 
 # source $HOME/.z/z.sh
 export ZSH=$HOME/.oh-my-zsh
-
 eval `ssh-agent`
 eval "$(rbenv init -)"
 PATH=$PATH:~/.cabal/bin/
@@ -90,5 +90,6 @@ DISABLE_AUTO_TITLE="true"
 eval "$(direnv hook zsh)"
 export GOPATH=/Users/steggy/gocode/
 PATH=$PATH:${GOPATH}/bin
+
 source ~/.secrets
 export DOCKER_HOST=tcp://stegerwerks.org:2376 DOCKER_TLS_VERIFY=1
