@@ -25,17 +25,53 @@ class Resource
     def install_name
       self.name.downcase
     end
+
+    def announce_install
+      puts "Installing #{install_name}"
+    end
+
+    def announce_removal
+      puts "Removing #{install_name}"
+    end
+
     def install
-      %x(brew install #{install_name})
+      announce_install
+      install_resource
     end
+
+    def install_resource
+      %x(./homebrew/bin/brew install #{install_name})
+    end
+
     def remove
-      %x(brew uninstall #{install_name} --force)
+      announce_removal
+      remove_resource
     end
+
+    def remove_resource
+      %x(./homebrew/bin/brew uninstall #{install_name} --force)
+    end
+
     def installed?
-      File.exists?("/usr/local/bin/#{install_name}")
+      File.exists?("#{File.expand_path(".")}/homebrew/bin/#{install_name}")
     end
   end
 end
+
+class Brew < Resource
+  class << self
+    def install_resource
+      %x{mkdir homebrew && curl -L https://github.com/Homebrew/homebrew/tarball/master | tar xz --strip 1 -C homebrew}
+    end
+    def remove_resource
+      %x{rm -rf homebrew}
+    end
+    def installed?
+      File.exists?("./homebrew")
+    end
+  end
+end
+
 
 # class CapsLockIsControl < Resource
 # end
@@ -51,10 +87,10 @@ class PlayDir < Resource
     def local_path
       File.expand_path("~/play")
     end
-    def install
+    def install_resource
       %x(mkdir -p #{local_path})
     end
-    def remove
+    def remove_resource
       %x(rmdir #x{local_path})
     end
     def installed?
@@ -71,10 +107,11 @@ class Dreamacs < SymLink
     def install_path
       "#{Dir.pwd}/#{install_name}"
     end
-    def install
-      %x(ln -s #{install_path} #{local_path} && open /usr/local/Cellar/emacs/*/Emacs.app)
+    def install_resource
+      local_app_path = Dir.glob("#{File.expand_path("./")}/homebrew/Cellar/emacs/*/Emacs.app").first
+      %x(ln -s #{install_path} #{local_path} && open #{local_app_path})
     end
-    def remove
+    def remove_resource
       %x(rm #{local_path})
     end
   end
@@ -91,13 +128,13 @@ class Dotemacs < SymLink
     def local_path
       "~/.emacs.d"
     end
-    def install
+    def install_resource
       if File.exists?(File.expand_path(local_path))
         %x(mv #{local_path} #{local_path}.bak)
       end
       %x(ln -s #{install_path} #{local_path})
     end
-    def remove
+    def remove_resource
       %x(rm #{local_path} )
       if File.exists?(File.expand_path(local_path + ".bak"))
           %x(mv #{local_path}.bak #{local_path})
@@ -109,10 +146,12 @@ end
 
 class Git < Resource; end
 class Zsh < Resource; end
+class Rbenv < Resource; end
+class Direnv < Resource; end
 
 class Emacs < Resource
-  def self.install
-    %x(brew install emacs --with-cocoa)
+  def self.install_resource
+    %x(./homebrew/bin/brew install emacs --with-cocoa)
   end
 end
 
@@ -124,14 +163,11 @@ class MikeyInstaller
     "install_manifest.yml"
   end
 
-
-
   def guest
     installed = []
     @resources.each do |resource|
       unless resource.installed?
-        puts "Installing #{resource}"
-        resource.install
+          resource.install
         installed << resource.install_name
       end
     end
@@ -141,8 +177,7 @@ class MikeyInstaller
     guest_installed_resources = YAML.load(File.open(manifest_file, "r"))
     @resources.each do |resource|
       if resource.installed? && guest_installed_resources.include?(resource.install_name)
-        puts "Removing #{resource}"
-        resource.remove
+          resource.remove
       end
     end
     File.delete(manifest_file)
@@ -153,15 +188,15 @@ class MikeyInstaller
     response = gets.strip
     if response.downcase == "y"
       @resources.each do |resource|
-        puts "removing #{resource}"
-        resource.remove
+          resource.remove
       end
     end
     File.delete(manifest_file)
   end
 end
+
 # TODO add iterm2
-installer = MikeyInstaller.new([Emacs, Git, Zsh, Dotemacs, PlayDir, Dreamacs])
-#installer = MikeyInstaller.new([Dotemacs, Dreamacs])
+installer = MikeyInstaller.new([Brew, Rbenv, Direnv, Emacs, Git, Zsh, Dotemacs, PlayDir, Dreamacs])
+
 
 options.keys.each {|x| installer.send(x) }
