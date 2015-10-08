@@ -5,13 +5,13 @@
 // ========================================================================= //
 //{{%PRESERVE%
 // Put your codes here
-// 
+//
 plugins.options["tanything_opt.keymap"] = {
     "C-z"   : "prompt-toggle-edit-mode",
     "SPC"   : "prompt-next-page",
-    "b"     : "prompt-previous-page",
-    "j"     : "prompt-next-completion",
-    "k"     : "prompt-previous-completion",
+    "C-b"     : "prompt-previous-page",
+    "C-j"     : "prompt-next-completion",
+    "C-k"     : "prompt-previous-completion",
     "M-<"     : "prompt-beginning-of-candidates",
     "M->"     : "prompt-end-of-candidates",
     "C-g"     : "prompt-cancel",
@@ -125,9 +125,17 @@ key.setGlobalKey(["C-x", "k"], function (ev) {
     BrowserCloseTabOrWindow();
 }, 'Close tab / window', false);
 
-// key.setGlobalKey("M-w", function (ev) {
-//     BrowserCloseTabOrWindow();
-// }, 'Close tab / window', false);
+
+
+key.setGlobalKey("M-o", function (ev) {
+    if (TreeStyleTabService.isHidden === undefined) {
+        TreeStyleTabService.isHidden = false;
+    }
+    // console.log(Object.getOwnPropertyNames(TreeStyleTabService));
+    var widthToSet = TreeStyleTabService.isHidden ? 0 : 200
+    TreeStyleTabService.setTabbarWidth(widthToSet, true);
+    TreeStyleTabService.isHidden = !TreeStyleTabService.isHidden
+}, 'Close tab / window', false);
 
 
 key.setGlobalKey(["C-x", "K"], function (ev) {
@@ -167,7 +175,7 @@ key.setGlobalKey(["C-x", "C-f"], function (ev) {
 }, 'Open the local file', true);
 
 key.setGlobalKey(["C-x", "C-s"], function (ev) {
-    saveDocument(window.content.document);		     
+    saveDocument(window.content.document);
 //    saveDocument(window.content.document, "/Users/michaelsteger/national/pagesToView/");
 }, 'Save current page to the file', true);
 
@@ -178,6 +186,10 @@ key.setGlobalKey(["C-c", "C-c", "C-v"], function (ev) {
 key.setGlobalKey(["C-c", "C-c", "C-c"], function (ev) {
     command.clearConsole();
 }, 'Clear Javascript console', true);
+
+key.setGlobalKey(["C-e"], function(ev) {
+    alert("Yay I rock");
+}, "Help", true);
 
 key.setEditKey(["C-x", "h"], function (ev) {
     command.selectAll(ev);
@@ -237,10 +249,6 @@ key.setEditKey('C-v', function (ev) {
     command.pageDown(ev);
 }, 'Page down', false);
 
-key.setEditKey('M-v', function (ev) {
-    command.pageUp(ev);
-}, 'Page up', false);
-
 key.setEditKey('M-<', function (ev) {
     command.moveTop(ev);
 }, 'Beginning of the text area', false);
@@ -289,10 +297,20 @@ key.setEditKey('C-M-y', function (ev) {
     if (!command.kill.ring.length) {
         return;
     }
-    let (ct = command.getClipboardText()) (!command.kill.ring.length || ct != command.kill.ring[0]) &&
+    let (ct = command.getClipboardText()) { (!command.kill.ring.length || ct != command.kill.ring[0]) &&
         command.pushKillRing(ct);
-    prompt.selector({message: "Paste:", collection: command.kill.ring, callback: function (i) {if (i >= 0) {key.insertText(command.kill.ring[i]);}}});
+    prompt.selector({message: "Paste:", collection: command.kill.ring, callback: function (i) {if (i >= 0) {key.insertText(command.kill.ring[i]);}}});}
 }, 'Show kill-ring and select text to paste', true);
+
+
+// key.setEditKey('C-M-y', function (ev) {
+//     if (!command.kill.ring.length) {
+//         return;
+//     }
+//         let (ct = command.getClipboardText()) (!command.kill.ring.length || ct != command.kill.ring[0]) &&
+//             command.pushKillRing(ct);
+//         prompt.selector({message: "Paste:", collection: command.kill.ring, callback: function (i) {if (i >= 0) {key.insertText(command.kill.ring[i]);}}});
+// }, 'Show kill-ring and select text to paste', true);
 
 key.setEditKey('C-w', function (ev) {
     goDoCommand("cmd_copy");
@@ -545,8 +563,8 @@ key.setViewKey(['C-c', 'C-e'], function (aEvent, aArg) {
 // Add stuff for history
 
 key.setViewKey('h', function(ev) {
-		   ext.exec("history-show"); 
-	       }, 'Look at my history', false);	      
+		   ext.exec("history-show");
+	       }, 'Look at my history', false);
 
 
 // Bookmark stuff
