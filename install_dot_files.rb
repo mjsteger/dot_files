@@ -121,8 +121,31 @@ class Zshrc < SymLink
     def install_path
       "#{Dir.pwd}/shell/zshrc"
     end
+    def bin_path
+      "#{Dir.pwd}/homebrew/bin/"
+    end
+    def install_resource
+      super
+      lines = File.open(local_path, "r+") {|f| f.readlines }
+      if lines.select {|line| line =~ /#{bin_path}/}.empty?
+        lines = ["export PATH=#{bin_path}:$PATH\n"] + lines
+        File.open(local_path, "w") { |f| lines.each(&f.method(:write)) }
+      end
+    end
   end
 end
+
+class Screenrc < SymLink
+  class << self
+    def local_path
+      File.expand_path("~/.screenrc")
+    end
+    def install_path
+      "#{Dir.pwd}/.screenrc"
+    end
+  end
+end
+
 class Dreamacs < SymLink
   class << self
     def local_path
@@ -152,11 +175,6 @@ class Dotemacs < SymLink
     end
   end
 end
-
-class Zshrc < SymLink
-
-end
-
 
 class Git < Resource; end
 class Zsh < Resource; end
@@ -210,7 +228,7 @@ class MikeyInstaller
 end
 
 
-installer = MikeyInstaller.new([Brew, Rbenv, Direnv, Emacs, Git, Zsh, Zshrc, Dotemacs, PlayDir, Dreamacs])
+installer = MikeyInstaller.new([Brew, Rbenv, Direnv, Emacs, Git, Zsh, Zshrc, Screenrc, Dotemacs, PlayDir, Dreamacs])
 
 
 options.keys.each {|x| installer.send(x) }

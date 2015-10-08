@@ -29,4 +29,14 @@ class ResourceTest < Minitest::Test
     File.delete(Zshrc.local_path)
     Zshrc.install
   end
+
+  def test_zshrc_has_path
+    zshrc_path = Zshrc.local_path
+    lines = File.open(zshrc_path, "r+") { |f| f.readlines }
+    lines.reject! { |line| line =~ /#{Zshrc.bin_path}/ }
+    File.open(zshrc_path, "w") { |f| lines.each(&f.method(:write)) }
+    Zshrc.remove
+    Zshrc.install
+    refute(File.open(zshrc_path, "r+") { |f| f.readlines }.select { |line| line =~ /#{Zshrc.bin_path}/ }.empty?)
+  end
 end
