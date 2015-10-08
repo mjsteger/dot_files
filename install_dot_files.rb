@@ -77,8 +77,22 @@ end
 # end
 
 class SymLink < Resource
-  def self.installed?
-    File.identical?(*[local_path, install_path].map(&File.method(:expand_path)))
+  class << self
+    def installed?
+      File.identical?(*[local_path, install_path].map(&File.method(:expand_path)))
+    end
+    def install_resource
+      if File.exists?(File.expand_path(local_path))
+        %x(mv #{local_path} #{local_path}.steggy_dotfile_bak)
+      end
+      %x(ln -s #{install_path} #{local_path})
+    end
+    def remove_resource
+      %x(rm #{local_path} )
+      if File.exists?(File.expand_path("#{local_path}.steggy_dotfile_bak"))
+        %x(mv #{local_path}.steggy_dotfile_bak #{local_path})
+      end
+    end
   end
 end
 
@@ -99,6 +113,16 @@ class PlayDir < Resource
   end
 end
 
+class Zshrc < SymLink
+  class << self
+    def local_path
+      File.expand_path("~/.zshrc")
+    end
+    def install_path
+      "#{Dir.pwd}/shell/zshrc"
+    end
+  end
+end
 class Dreamacs < SymLink
   class << self
     def local_path
@@ -108,11 +132,9 @@ class Dreamacs < SymLink
       "#{Dir.pwd}/#{install_name}"
     end
     def install_resource
+      super
       local_app_path = Dir.glob("#{File.expand_path("./")}/homebrew/Cellar/emacs/*/Emacs.app").first
-      %x(ln -s #{install_path} #{local_path} && open #{local_app_path})
-    end
-    def remove_resource
-      %x(rm #{local_path})
+      %x(open #{local_app_path})
     end
   end
 end
@@ -128,19 +150,11 @@ class Dotemacs < SymLink
     def local_path
       "~/.emacs.d"
     end
-    def install_resource
-      if File.exists?(File.expand_path(local_path))
-        %x(mv #{local_path} #{local_path}.bak)
-      end
-      %x(ln -s #{install_path} #{local_path})
-    end
-    def remove_resource
-      %x(rm #{local_path} )
-      if File.exists?(File.expand_path(local_path + ".bak"))
-          %x(mv #{local_path}.bak #{local_path})
-      end
-    end
   end
+end
+
+class Zshrc < SymLink
+
 end
 
 
@@ -195,8 +209,8 @@ class MikeyInstaller
   end
 end
 
-# TODO add iterm2
-installer = MikeyInstaller.new([Brew, Rbenv, Direnv, Emacs, Git, Zsh, Dotemacs, PlayDir, Dreamacs])
+
+installer = MikeyInstaller.new([Brew, Rbenv, Direnv, Emacs, Git, Zsh, Zshrc, Dotemacs, PlayDir, Dreamacs])
 
 
 options.keys.each {|x| installer.send(x) }

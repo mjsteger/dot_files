@@ -3,18 +3,10 @@ require 'minitest'
 
 
 class ResourceTest < Minitest::Test
-  # def test_brew_install
-  #   if Brew.installed?
-  #     Brew.remove
-  #   end
-  #   refute Brew.installed?
-  #   Brew.install
-  #   assert Brew.installed?
-  # end
-
   def setup
     Brew.install unless Brew.installed?
   end
+
   def test_resource_install
     descendents = ObjectSpace.each_object(Resource.singleton_class).to_a - [Resource]
     descendents.each do |resource|
@@ -28,7 +20,13 @@ class ResourceTest < Minitest::Test
     end
   end
 
-end
-class MikeyInstallerTest < Minitest::Test
-
+  def test_symlinks_respect_bak
+    Zshrc.remove if Zshrc.installed?
+    File.open(Zshrc.local_path, 'w') {|f| f.write("Foo")}
+    Zshrc.install
+    Zshrc.remove
+    assert_equal(File.open(Zshrc.local_path, 'r').read, "Foo")
+    File.delete(Zshrc.local_path)
+    Zshrc.install
+  end
 end
