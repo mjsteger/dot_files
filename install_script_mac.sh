@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO ugly hack, but brew doesn't like "which"
-
 git submodule init && git submodule update
 
 ./install_dot_files.rb -g
