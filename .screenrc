@@ -162,5 +162,3 @@ hardstatus string '%{= kG}[ %{G}%H %{g} %{C}%l%{c}%{G}][%{g}%= %{= kw}%?%-Lw%?%{
 windowlist string " screen[%n %t] %h"
 aclchg root -wx "#?"
 aclchg root +x detach,select,next,prev,windowlist
-
-
